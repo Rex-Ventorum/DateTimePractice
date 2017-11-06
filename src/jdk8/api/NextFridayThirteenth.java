@@ -35,7 +35,7 @@ public class NextFridayThirteenth {
 //          System.out.println(christmas.getDayOfWeek());
 
             BMD_DateUtilites8 dateUtil = new BMD_DateUtilites8();
-            LocalDateTime date1 = dateUtil.findNextDayOfWeekWithDateOfMonth(DayOfWeek.MONDAY, 7);
+            LocalDateTime date1 = dateUtil.findNextDayOfWeekWithDateOfMonth(DayOfWeek.WEDNESDAY, 7).withHour(0).withMinute(30).withSecond(4);
             System.out.println(dateUtil.formatLocalDateTimeToString(date1));
             System.out.println(dateUtil.formatLocalDateTimeToString(date1, BMD_DateUtilites8.LONG_DATE_TIME));
             
@@ -46,5 +46,7 @@ public class NextFridayThirteenth {
             System.out.println("Years: " + dateUtil.getYearsBetween(date1, now));
             System.out.println("Hours: " + dateUtil.getHoursBetween(now, date1));
             System.out.println("Minnutes: " + dateUtil.getMinnutesBetween(now, date1));
+            
+            System.out.println(dateUtil.getChronoUnitBreakDownToString(date1, now));
     }
 }

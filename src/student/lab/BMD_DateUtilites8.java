@@ -33,7 +33,7 @@ public class BMD_DateUtilites8 {
     public static final String SHORT_DATE_ONLY = "MM/dd/yyyy";
     public static final String LONG_DATE_ONLY = "MMMM dd, yyyy";
     public static final String SHORT_TIME_ONLY = "hh:mm a";
-    public static final String LONG_TIME_ONLY = "HH:mm:ss:";
+    public static final String LONG_TIME_ONLY = "HH:mm:ss";
     public static final String SHORT_DATE_TIME = SHORT_DATE_ONLY + " " + SHORT_TIME_ONLY;
     public static final String LONG_DATE_TIME = LONG_DATE_ONLY + " " + LONG_TIME_ONLY;
     
@@ -47,14 +47,14 @@ public class BMD_DateUtilites8 {
     public final int getTemporalFieldBetween(LocalDateTime date1, LocalDateTime date2, TemporalField unit)
                 throws DateTimeException,UnsupportedTemporalTypeException,ArithmeticException,IllegalArgumentException {
        if(date1 == null || date2 == null || unit == null) throw new IllegalArgumentException("Arguments May Not Be Null");
-       if(date1.isAfter(date2)){LocalDateTime temp = date1;date1 = date2;date2 = temp;}//Swap Dates
+       if(date1.isAfter(date2)){LocalDateTime swap = date1;date1 = date2;date2 = swap;}//Swap Dates
        return date1.get(unit) - date2.get(unit); 
     }
     
     public final long getTemporalUnitBetween(LocalDateTime date1, LocalDateTime date2, TemporalUnit unit)
                 throws DateTimeException,UnsupportedTemporalTypeException,ArithmeticException,IllegalArgumentException {
        if(date1 == null || date2 == null || unit == null) throw new IllegalArgumentException("Arguments May Not Be Null");
-       if(date1.isAfter(date2)){LocalDateTime temp = date1;date1 = date2;date2 = temp;}//Swap Dates
+       if(date1.isAfter(date2)){LocalDateTime swap = date1;date1 = date2;date2 = swap;}//Swap Dates
        return date1.until(date2, unit);
      }
         
@@ -86,28 +86,29 @@ public class BMD_DateUtilites8 {
     public final long[] getChronoUnitBreakDownBetween(LocalDateTime date1, LocalDateTime date2)
             throws DateTimeException,UnsupportedTemporalTypeException,ArithmeticException,IllegalArgumentException{
        if(date1 == null || date2 == null) throw new IllegalArgumentException("Arguments May Not Be Null");
-       if(date1.isAfter(date2)){LocalDateTime temp = date1;date1 = date2;date2 = temp;}//Swap Dates
-       
+       if(date1.isAfter(date2)){LocalDateTime swap = date1;date1 = date2;date2 = swap;}//Swap Dates
+        System.out.println();
        long[] breakDown = new long[BREAK_DOWN_UNITS];
        LocalDateTime temp = LocalDateTime.from(date1);
+       System.out.println(formatLocalDateTimeToString(date1));
+       System.out.println(formatLocalDateTimeToString(date2));
+       breakDown[YEARS_IN_ARRAY] = ChronoUnit.YEARS.between(temp, date2);
+       temp = temp.plusYears(breakDown[YEARS_IN_ARRAY]);
        
-       breakDown[YEARS_IN_ARRAY] = date1.until(temp, ChronoUnit.YEARS);
-       temp.plusYears(breakDown[YEARS_IN_ARRAY]);
+       breakDown[MONTHS_IN_ARRAY] = ChronoUnit.MONTHS.between(temp, date2);
+       temp = temp.plusMonths(breakDown[MONTHS_IN_ARRAY]);
        
-       breakDown[MONTHS_IN_ARRAY] = date1.until(temp, ChronoUnit.MONTHS);
-       temp.plusMonths(breakDown[MONTHS_IN_ARRAY]);
+       breakDown[DAYS_IN_ARRAY] = ChronoUnit.DAYS.between(temp, date2);
+       temp = temp.plusDays(breakDown[DAYS_IN_ARRAY]);
        
-       breakDown[DAYS_IN_ARRAY] = date1.until(temp, ChronoUnit.DAYS);
-       temp.plusDays(breakDown[DAYS_IN_ARRAY]);
-       
-       breakDown[HOURS_IN_ARRAY] = date1.until(temp, ChronoUnit.HOURS);
-       temp.plusHours(breakDown[HOURS_IN_ARRAY]);
+       breakDown[HOURS_IN_ARRAY] = ChronoUnit.HOURS.between(temp, date2);
+       temp = temp.plusHours(breakDown[HOURS_IN_ARRAY]);
               
-       breakDown[MINNUTES_IN_ARRAY] = date1.until(temp, ChronoUnit.MINUTES);
-       temp.plusMinutes(breakDown[MINNUTES_IN_ARRAY]);
+       breakDown[MINNUTES_IN_ARRAY] = ChronoUnit.MINUTES.between(temp, date2);
+       temp = temp.plusMinutes(breakDown[MINNUTES_IN_ARRAY]);
        
-       breakDown[SECONDS_IN_ARRAY] = date1.until(temp, ChronoUnit.SECONDS);
-       temp.plusSeconds(breakDown[SECONDS_IN_ARRAY]);
+       breakDown[SECONDS_IN_ARRAY] = ChronoUnit.SECONDS.between(temp, date2);
+       temp = temp.plusSeconds(breakDown[SECONDS_IN_ARRAY]);
        
        return breakDown;
     }
@@ -119,12 +120,12 @@ public class BMD_DateUtilites8 {
     public final String getChronoUnitBreakDownToString(long[] breakDown) throws IllegalArgumentException{
         if(breakDown == null) throw new IllegalArgumentException("Array May Not Be Null");
         if(breakDown.length != BREAK_DOWN_UNITS) throw new IllegalArgumentException("Array Must Have Length Of " + BREAK_DOWN_UNITS);
-        return breakDown[YEARS_IN_ARRAY] + " years, " +
-               breakDown[MONTHS_IN_ARRAY] + " months, " +
-               breakDown[DAYS_IN_ARRAY] + " days, " +
-               breakDown[HOURS_IN_ARRAY] + " hours, " +
-               breakDown[MINNUTES_IN_ARRAY] + " minnutes, " +
-               breakDown[SECONDS_IN_ARRAY] + " seconds";               
+        return breakDown[YEARS_IN_ARRAY] + " Years, " +
+               breakDown[MONTHS_IN_ARRAY] + " Months, " +
+               breakDown[DAYS_IN_ARRAY] + " Days, " +
+               breakDown[HOURS_IN_ARRAY] + " Hours, " +
+               breakDown[MINNUTES_IN_ARRAY] + " Minnutes, " +
+               breakDown[SECONDS_IN_ARRAY] + " Seconds";               
     }
     
     public final LocalDateTime findNextDayOfWeekWithDateOfMonth(DayOfWeek dow, int dom) throws IllegalArgumentException{
